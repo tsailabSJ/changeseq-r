@@ -5,12 +5,13 @@ import argparse
 # Set up argument parser
 parser = argparse.ArgumentParser(description="Process folder path input.")
 parser.add_argument('--folder_path', type=str, required=True, help='Folder path where results are stored')
+parser.add_argument('--sample_info', type=str, required=True, help='Folder path where sample_info.csv is located')
 
 # Parse the arguments
 args = parser.parse_args()
 
 # Load sample information
-sample_info = pd.read_csv('sample_info.csv')
+sample_info = pd.read_csv(args.sample_info)
 
 # Use the input folder path
 folder_path = args.folder_path
@@ -50,31 +51,41 @@ if run == True:
     df_combined = pd.merge(df_combined, sample_info, left_on='sample', right_on = "Sample", how='left')
 
     df_combined.drop(columns=['Sample'])
-    df_combined = df_combined[['barcode', 'target', 'Sequence', 'sample', 'sampling_ratio', 'Treatment', 'Group', 'Target', 'Concentration', 'UMI_format']]
+    df_combined = df_combined[['barcode', 'target', 'Sequence', 'sample', 'sampling_ratio', 'Treatment', 'Group', 'Target', 'DNA_Conc', 'Mg_Conc', 'UMI_format', 'Rep']]
+    
+    df_combined['label'] = df_combined['Target'] + '_' + df_combined['Mg_Conc'].astype(str) + '_' + df_combined['Rep']
     
     print("Saving combined file...")
     df_combined.to_csv(f'{folder_path}/all_results_combined.csv', index=False) # Export as a slightly less big file for downstream analysis.
+    
+    print("Cleaning up and filtering combined file...")
+    df_combined_clean = df_combined.copy()
 
-print("Cleaning up and filtering combined file...")
-df_combined_clean = df_combined.copy()
+    
+if run == False:
+    df_combined_clean = pd.read_csv(f'{folder_path}/all_results_combined.csv')
+    
 
 # Clean up some NAs and replace - with ''.
-df_combined_clean = df_combined_clean.dropna()
-df_combined_clean = df_combined_clean.replace('-', '', regex=True)
+# df_combined_clean = df_combined_clean.drop('sampling_ratio', axis=1)
+# df_combined_clean = df_combined_clean.dropna()
+# df_combined_clean = df_combined_clean.replace('-', '', regex=True)
 
 # Filter for only barcodes that are 15 bp and randomized targets that are between 21 and 30 bp
 # Remove reads with sequence ambiguity (Ns in the reads)
 df_combined_clean['barcode'] = df_combined_clean['barcode'].astype(str)
 df_combined_clean['target'] = df_combined_clean['target'].astype(str)
 df_combined_clean = df_combined_clean[~df_combined_clean['barcode'].str.contains('N') & ~df_combined_clean['target'].str.contains('N')]
-df_combined_clean = df_combined_clean[(df_combined_clean['barcode'].str.len()==15) & (df_combined_clean['target'].str.len()>=21) & (df_combined_clean['target'].str.len()<=30)]
+df_combined_clean = df_combined_clean[(df_combined_clean['barcode'].str.len()==15) & (df_combined_clean['target'].str.len()>=21) & (df_combined_clean['target'].str.len()<=25)]
 
 # Add a label for important features
-df_combined_clean['label'] = df_combined_clean['Target'] + '_' + df_combined_clean['Concentration'].astype(str) + '_' + df_combined_clean['UMI_format']
+# df_combined_clean['label'] = df_combined_clean['Target'] + '_' + df_combined_clean['Mg_Conc'].astype(str) + '_' + df_combined_clean['Rep']
 
 # Save results
-print("Saving filterd combined file as all_results_combined_new_15_21-30_noNs.csv...")
-df_combined_clean.to_csv(f'{folder_path}/all_results_combined_new_15_21-30_noNs.csv', index=False)
+# print("Saving filterd combined file as all_results_combined_new_15_21-30_noNs.csv...")
+# df_combined_clean.to_csv(f'{folder_path}/all_results_combined_new_15_21-30_noNs.csv', index=False)
+print("Saving filterd combined file as all_results_combined_cleaned_21_25.csv...")
+df_combined_clean.to_csv(f'{folder_path}/all_results_combined_cleaned_21_25.csv', index=False)
 print("Done.")
 
 
@@ -82,8 +93,6 @@ print("Done.")
 # Unique read
 print("Final touches: creating summary table for plotting...")
 
-
-df_combined_clean = pd.read_csv(f'{folder_path}/all_results_combined_new_15_21-30_noNs.csv')
 
 df_combined_clean['unique_read'] = df_combined_clean['barcode']+df_combined_clean['target']
 

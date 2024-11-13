@@ -1,6 +1,6 @@
 #!/bin/bash
 
-dir=$1
+INPUT_DIR=$1
 file=$2
 
 INPUT_COUNT=$(grep -c "^@" "$file")
@@ -12,7 +12,7 @@ sample_id=$(basename "$file" .merged.fastq)
 for fraction in 1.0 0.9 0.8 0.7 0.6 0.5 0.4 0.3 0.2 0.1
 do
     # Set the output file name based on the fraction
-    output_file="${dir}/${sample_id}.merged.sampled.${fraction}.fastq"
+    output_file="${INPUT_DIR}/${sample_id}.merged.sampled.${fraction}.fastq"
 
     # Use seqtk to sample the reads
     seqtk sample -s100 "$file" $fraction > "$output_file"

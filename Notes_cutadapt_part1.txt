@@ -1,0 +1,41 @@
+
+
+I updated the sequence extraction pipeline to use cutadapt. 
+10bp adapters were used. 0.1 error rate was allowed. 
+Trimmed sequences were separated into two parts:
+15 bp barcode (first 15 bp) and target ("the rest"). 
+The 15 bp barcode must match NNWNNWNNWNNWNNW pattern. 
+The target is expected to be 23 bp, but between 21 and 25 are kept. 
+This allows for "up-to 2 edit distances" filters in the downstream analysis. 
+
+
+Since part of the analysis was completed already, 
+we can start with the *.merged.fastq reads
+
+ln -s ../2024-10-31-CHANGE-seq-randomized-Part1-1mMMg/results_new_new .
+
+Let's copy the pipeline in 2024-11-08-CHANGE-seq-randomized-cutadapt-pipeline
+(so we have a record of what I ran, in case I make updates to the pipeline)
+
+Make sure the input, output, src are correct in both the bash and main_pipeline .sh files. 
+bash $src/bash_main_pipeline.sh
+
+mkdir -p run_stats
+mkdir -p plots
+mkdir -p tables
+
+One this finishes (runtime: ~30 mins), combine the results into one big file with 
+bsub -q priority -e run_stats/combine.error -o run_stats/combine.out -M 800000MB -n 1 python src/preprocessing_combine_files.py --folder_path results_new_new --sample_info sample_info.csv
+
+
+Some stats: 
+
+bsub -q priority -e run_stats/unique_barcodes.error -o run_stats/unique_barcodes.out -M 800000MB python plots_preprocessing_unique_barcodes.py -f results_new_new/all_results_combined_cleaned_21_25.csv
+bsub -q priority -e run_stats/collision.error -o run_stats/collision.out -M 800000MB python plots_preprocessing_and_collision.py
+
+
+
+Calculating log2FC. 
+bsub -q priority -e run_stats/results_log2FC.error -o run_stats/results_log2FC.out -M 800000MB python src/results_log2FC.py
+bsub -q priority -e run_stats/results_collision_filtering.error -o run_stats/results_collision_filtering.out -M 800000MB python src/removing_collision_preprocessing_pybtree.py
+

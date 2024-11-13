@@ -3,7 +3,8 @@
 module load conda3/202011
 
 # Define the parent directory that contains the folders
-parent_directory="results"
+# parent_directory="results"
+parent_directory=$1
 
 # Loop through all the folders in the parent directory
 for folder in "$parent_directory"/*/

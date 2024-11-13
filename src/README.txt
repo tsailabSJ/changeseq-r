@@ -1,12 +1,12 @@
+This is old, we have cutadapt now. 
+
+
 CHANGE-seq randomized pipeline
 
-smb://jude.stjude.org/hematology/common/sequencing/240801_VH00889_179_AAFT5F7M5/Data/Intensities/BaseCalls
+smb://jude.stjude.org/hematology/common/sequencing/241029_VH00889_211_AACLKYWHV/Data/Intensities/BaseCalls
 
-# 0.25, 0.50, 1 data:
-ln -s ~/sequencing/240801_VH00889_179_AAFT5F7M5/Data/Intensities/BaseCalls ./240801_VH00889_179_AAFT5F7M5
-
-# 5pg data:
-ln -s ~/sequencing/240903_VH00889_189_AAFLNNJM5/Data/Intensities/BaseCalls ./240903_VH00889_189_AAFLNNJM5
+# Part1-1mMMg
+ln -s /research/dept/hem/common/sequencing/241029_VH00889_211_AACLKYWHV/Data/Intensities/BaseCalls ./241029_VH00889_211_AACLKYWHV
 
 
 Step 1a: Merge the fastq files
@@ -32,7 +32,7 @@ This file loops through every *.merged.fastq files in a folder and runs fastq_sa
 
 
 
-Step 2: Extract barcodes
+Step 2: Extract barcodes (OLD METHOD!!!!!!!!!!)
 
 bash bash_run_extract_normalized.sh ./merged_fastq_seqtik
 
@@ -70,3 +70,10 @@ bash preprocessing_combine_files_split.sh
 
 
 Run .ipynb to analysis the number of unique barcode+target reads. 
+
+
+
+
+
+
+
