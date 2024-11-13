@@ -1,6 +1,5 @@
 #!/bin/bash
-# Combining all the steps into one pipeline! 
-# Before you begin, please update template_sequences.csv
+# Combining all the steps into one pipeline!
 
 # ln -s /research/dept/hem/common/sequencing/241029_VH00889_211_AACLKYWHV/Data/Intensities/BaseCalls ./241029_VH00889_211_AACLKYWHV
 
