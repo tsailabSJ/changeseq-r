@@ -30,27 +30,24 @@ Ensure these tools are installed and accessible in your environment.
 ## Usage
 
 1. Create a symbolic link to your sequencing data directory:
-```
-bash
-ln -s /path/to/sequencing/241029_VH00889_211_AACLKYWHV/Data/Intensities/BaseCalls ./241029_VH00889_211_AACLKYWHV
-```
+   ```bash
+   ln -s /path/to/sequencing/241029_VH00889_211_AACLKYWHV/Data/Intensities/BaseCalls ./241029_VH00889_211_AACLKYWHV
+   ```
 
 2. Run the main pipeline script:
-```
-bash
-./bash_main_pipeline.sh INPUT_DIR OUTPUT_DIR SRC_DIR
-```
+   ```bash
+   ./bash_main_pipeline.sh INPUT_DIR OUTPUT_DIR SRC_DIR
+   ```
    
-Replace `INPUT_DIR`, `OUTPUT_DIR`, and `SRC_DIR` with your actual paths.
+   Replace `INPUT_DIR`, `OUTPUT_DIR`, and `SRC_DIR` with your actual paths.
 
 3. Create necessary directories:
-```
-bash
-mkdir -p run_stats
-mkdir -p plots
-mkdir -p tables
-mkdir -p results_log2FC
-```
+   ```bash
+   mkdir -p run_stats
+   mkdir -p plots
+   mkdir -p tables
+   mkdir -p results_log2FC
+   ```
 
 4. Once the pipeline finishes (approx. runtime: ~30 minutes), combine results into one file:
    ```bash
@@ -69,6 +66,15 @@ mkdir -p results_log2FC
      python plots_preprocessing_and_collision.py
    ```
 
+## Collision Filtering
+
+Filter out collisions. A collision is defined as two randomized target with the same barcode. To avoid collision, we required that the Cas9 end-repaired target is within 2 edit distances of the uncleaved control sequence.
+
+```bash
+bsub -q priority -e run_stats/results_collision_filtering.error -o run_stats/results_collision_filtering.out -M 800000MB \
+  python src/removing_collision_preprocessing_pybtree.py
+```
+
 ## Calculating Relative Activity
 
 Relative activity is calculated as `(fold change off-target / fold change on-target) * 100`, where:
@@ -81,13 +87,4 @@ Before running, ensure the input folder name is correctly set and samples are pr
 ```bash
 bsub -q priority -e run_stats/results_log2FC.error -o run_stats/results_log2FC.out -M 800000MB \
   python src/results_log2FC.py
-```
-
-## Collision Filtering
-
-After calculating relative activities, filter out collisions. A collision is defined as a Cas9 end-repaired target that is within 2 edit distances of the uncleaved control sequence.
-
-```bash
-bsub -q priority -e run_stats/results_collision_filtering.error -o run_stats/results_collision_filtering.out -M 800000MB \
-  python src/removing_collision_preprocessing_pybtree.py
 ```
