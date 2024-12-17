@@ -30,24 +30,27 @@ Ensure these tools are installed and accessible in your environment.
 ## Usage
 
 1. Create a symbolic link to your sequencing data directory:
-   ```bash
-   ln -s /path/to/sequencing/241029_VH00889_211_AACLKYWHV/Data/Intensities/BaseCalls ./241029_VH00889_211_AACLKYWHV
-   ```
+```
+bash
+ln -s /path/to/sequencing/241029_VH00889_211_AACLKYWHV/Data/Intensities/BaseCalls ./241029_VH00889_211_AACLKYWHV
+```
 
 2. Run the main pipeline script:
-   ```bash
-   ./bash_main_pipeline.sh INPUT_DIR OUTPUT_DIR SRC_DIR
-   ```
+```
+bash
+./bash_main_pipeline.sh INPUT_DIR OUTPUT_DIR SRC_DIR
+```
    
-   Replace `INPUT_DIR`, `OUTPUT_DIR`, and `SRC_DIR` with your actual paths.
+Replace `INPUT_DIR`, `OUTPUT_DIR`, and `SRC_DIR` with your actual paths.
 
 3. Create necessary directories:
-   ```bash
-   mkdir -p run_stats
-   mkdir -p plots
-   mkdir -p tables
-   mkdir -p results_log2FC
-   ```
+```
+bash
+mkdir -p run_stats
+mkdir -p plots
+mkdir -p tables
+mkdir -p results_log2FC
+```
 
 4. Once the pipeline finishes (approx. runtime: ~30 minutes), combine results into one file:
    ```bash
