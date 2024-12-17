@@ -12,7 +12,7 @@ def extract_sequences(fastq_file, adapter_left, adapter_right):
     # Run cutadapt to extract only the region between adapters
     cutadapt_output = fastq_file.replace(".merged.fastq", ".cutadapt.fastq")
     command = f"""
-    cutadapt -g {adapter_left}...{adapter_right} --rc -e 0.1 --cores 8 --discard-untrimmed -o {cutadapt_output} {fastq_file}
+    cutadapt -g '{adapter_left};min_overlap=9...{adapter_right};min_overlap=9' --rename '{{id}}_{{match_sequence}}_{{rc}}' --rc -e 0.1 --cores 8 --discard-untrimmed -o {cutadapt_output} {fastq_file}
     """
     
     # Run the command using os.system and check if it executes successfully
@@ -40,7 +40,7 @@ def extract_sequences(fastq_file, adapter_left, adapter_right):
             ):
                 sequences.append({'barcode': barcode, 'target': target})
             else:
-                failed_reads.append(header.split()[0].strip('@'))  # Add read ID to failed if filters not passed
+                failed_reads.append({'barcode': barcode, 'target': target})  # Save the failed ones.
 
     return sequences, failed_reads
 

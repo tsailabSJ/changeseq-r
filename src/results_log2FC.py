@@ -6,8 +6,7 @@ import math
 
 # Generate a results.csv table
 
-df_combined = pd.read_csv(f'results_new_new/all_results_combined.csv')
-df_combined['label'] = df_combined['Target'] + '_' + df_combined['Mg_Conc'].astype(str) + '_' + df_combined['Rep']
+df_combined = pd.read_csv(f'results_cutadaptv2/all_results_combined_cleaned_21_25.csv')
 
 def split_df(df, label):
     # Filter for the specific label and treatment
@@ -22,7 +21,7 @@ for label in labels:
 
 # Define minimum read count
 minimum_read_count = 1
-log2FC_pseudocount = 10
+log2FC_pseudocount = 1
 save_folder="results_log2FC"
 
 # Function to get barcode-target counts for good barcodes
@@ -85,8 +84,8 @@ def cas9_with_good_barcodes(df, good_barcodes_df, new_target_seq):
     results['control_norm'] = results['control_ratios']*1000000
     results['Cas9_norm'] = results['Cas9_ratios']*1000000
     
-    results['log2FC'] = np.log2((results['Cas9_norm']+log2FC_pseudocount) / (results['control_norm']+log2FC_pseudocount)) ############################
-    results = results.sort_values(by='log2FC', ascending=False)
+    # results['log2FC'] = np.log2((results['Cas9_norm']+log2FC_pseudocount) / (results['control_norm']+log2FC_pseudocount)) ############################
+    # results = results.sort_values(by='log2FC', ascending=False)
     
     results = results[results['control_target_seq'].str.len() == 23] 
     
@@ -129,27 +128,12 @@ def off_target_analysis_pipeline(df_control, df_treated, name):
 
 
 
+unique_labels = combined_df['Label'].unique()
+
+for label in unique_labels:
+    df_control = combined_df[(combined_df['Label'] == label) & (combined_df['Treatment'] == 'SrfI')]
+    df_treated = combined_df[(combined_df['Label'] == label) & (combined_df['Treatment'] == 'Cas9')]
     
-    
-off_target_analysis_pipeline(indiv_dfs['CXCR4.s8_0_rep1'], indiv_dfs['CXCR4.s8_1_rep1'], 'CXCR4.s8_1mM_rep1')
-off_target_analysis_pipeline(indiv_dfs['CXCR4.s8_0_rep1'], indiv_dfs['CXCR4.s8_1_rep2'], 'CXCR4.s8_1mM_rep2')
-
-off_target_analysis_pipeline(indiv_dfs['AAVS1.s14_0_rep1'], indiv_dfs['AAVS1.s14_1_rep2'], 'AAVS1.s14_1mM_rep2')
-off_target_analysis_pipeline(indiv_dfs['AAVS1.s14_0_rep1'], indiv_dfs['AAVS1.s14_1_rep1'], 'AAVS1.s14_1mM_rep1')
-
-off_target_analysis_pipeline(indiv_dfs['LAG3.s9_0_rep1'], indiv_dfs['LAG3.s9_1_rep1'], 'LAG3.s9_1mM_rep1')
-off_target_analysis_pipeline(indiv_dfs['LAG3.s9_0_rep1'], indiv_dfs['LAG3.s9_1_rep2'], 'LAG3.s9_1mM_rep2')
-
-off_target_analysis_pipeline(indiv_dfs['TRAC.s1_0_rep1'], indiv_dfs['TRAC.s1_1_rep1'], 'TRAC.s1_1mM_rep1')
-off_target_analysis_pipeline(indiv_dfs['TRAC.s1_0_rep1'], indiv_dfs['TRAC.s1_1_rep2'], 'TRAC.s1_1mM_rep2')
-
-off_target_analysis_pipeline(indiv_dfs['CTLA4.s9_0_rep1'], indiv_dfs['CTLA4.s9_1_rep2'], 'CTLA4.s9_1mM_rep2')
-off_target_analysis_pipeline(indiv_dfs['CTLA4.s9_0_rep1'], indiv_dfs['CTLA4.s9_1_rep1'], 'CTLA4.s9_1mM_rep1')
-
-off_target_analysis_pipeline(indiv_dfs['CCR5.s8_0_rep1'], indiv_dfs['CCR5.s8_1_rep2'], 'CCR5.s8_1mM_rep2')
-off_target_analysis_pipeline(indiv_dfs['CCR5.s8_0_rep1'], indiv_dfs['CCR5.s8_1_rep1'], 'CCR5.s8_1mM_rep1')
-
-off_target_analysis_pipeline(indiv_dfs['CXCR4.s8_0_rep1'], indiv_dfs['CXCR4.s8_5_rep1'], 'CXCR4.s8_5mM_rep1')
-off_target_analysis_pipeline(indiv_dfs['AAVS1.s14_0_rep1'], indiv_dfs['AAVS1.s14_5_rep1'], 'AAVS1.s14_5mM_rep1')
-off_target_analysis_pipeline(indiv_dfs['LAG3.s9_0_rep1'], indiv_dfs['LAG3.s9_5_rep1'], 'LAG3.s9_5mM_rep1')
-off_target_analysis_pipeline(indiv_dfs['CTLA4.s9_0_rep1'], indiv_dfs['CTLA4.s9_5_rep1'], 'CTLA4.s9_5mM_rep1')
+    # Only run if both dataframes are non-empty
+    if not df_control.empty and not df_treated.empty:
+        off_target_analysis_pipeline(df_control, df_treated, name=label)
