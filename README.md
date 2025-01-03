@@ -34,7 +34,7 @@ Ensure these tools are installed and accessible in your environment.
    ln -s /path/to/sequencing/241029_VH00889_211_AACLKYWHV/Data/Intensities/BaseCalls ./241029_VH00889_211_AACLKYWHV
    ```
 
-2. Run the main pipeline script:
+2. Run the main pipeline script to extract randomized targets and unique barcodes from `.fastq` files:
    ```bash
    ./bash_main_pipeline.sh INPUT_DIR OUTPUT_DIR SRC_DIR
    ```
