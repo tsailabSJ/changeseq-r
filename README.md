@@ -6,11 +6,12 @@ This open source pipeline processes CHANGE-seq-R sequencing reads, extracts the 
 
 The pipeline:
 
-1. Uses `cutadapt` to trim flanking sequences `ATGTGTCAGA` and `CTTCTTCAAG` from the sequencing reads.
-2. Extracts a 15 bp barcode and a target region from each read.
-3. Ensures the barcode matches an `NNWNNWNNWNNWNNW` pattern (15 bp total, where `W` = A/T and `N` = A/C/G/T).
-4. Retains targets between 21 and 25 bp long to allow for up to 2 edit distances in downstream analysis.
-5. Calculates relative activity by comparing fold changes (Cas9 vs. control and then normalizing to on-target activity).
+1. Uses `SeqKit` to merge R1 and R2 paired end reads. 
+2. Uses `cutadapt` to trim flanking sequences `ATGTGTCAGA` and `CTTCTTCAAG` from the sequencing reads.
+3. Extracts a 15 bp barcode and a target region from each read.
+4. Ensures the barcode matches an `NNWNNWNNWNNWNNW` pattern (15 bp total, where `W` = A/T and `N` = A/C/G/T).
+5. Retains targets between 21 and 25 bp long to allow for up to 2 edit distances in downstream analysis.
+6. Calculates relative activity by comparing fold changes (Cas9 vs. control and then normalizing to on-target activity).
 
 ## Adapter Trimming Details
 
