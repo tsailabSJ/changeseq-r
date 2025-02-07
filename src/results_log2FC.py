@@ -7,6 +7,7 @@ import math
 # Generate a results.csv table
 
 # df_combined = pd.read_csv(f'results_cutadaptv2/all_results_combined_cleaned_21_25.csv')
+parser = argparse.ArgumentParser(description="Analyze results.")
 parser.add_argument('--combined_results', type=str, required=True, help='File for the combined results: all_results_combined_cleaned_21_25.csv')
 args = parser.parse_args()
 
@@ -132,11 +133,11 @@ def off_target_analysis_pipeline(df_control, df_treated, name):
 
 
 
-unique_labels = combined_df['Label'].unique()
+unique_labels = df_combined['Target'].unique()
 
 for label in unique_labels:
-    df_control = combined_df[(combined_df['Label'] == label) & (combined_df['Treatment'] == 'SrfI')]
-    df_treated = combined_df[(combined_df['Label'] == label) & (combined_df['Treatment'] == 'Cas9')]
+    df_control = df_combined[(df_combined['Target'] == label) & (df_combined['Treatment'] == 'SrfI')]
+    df_treated = df_combined[(df_combined['Target'] == label) & (df_combined['Treatment'] == 'Cas9')]
     
     # Only run if both dataframes are non-empty
     if not df_control.empty and not df_treated.empty:
