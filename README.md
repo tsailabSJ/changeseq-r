@@ -27,7 +27,15 @@ The pipeline:
 
 Ensure these tools are installed and accessible in your environment.
 
-## Usage
+## Instructions for demo with test files
+Test fastq.gz and corresponding sample.txt files are provided for testing in `test_data`. These are sampled CTLA4 and CTLA4_control R1 and R2 reads. 
+1. Run the main pipeline script to merge R1 and R2 fastq.gz files and extract the randomized targets and unique barcodes. 
+   ```bash
+   ./bash_main_pipeline.sh test_data results src
+   ```
+2. 
+
+## Advanced Usage
 
 1. Create a symbolic link to your sequencing data directory:
    ```bash
