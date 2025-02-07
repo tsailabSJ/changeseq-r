@@ -41,3 +41,8 @@ for R1 in "$INPUT_DIR"/*_R1_*.fastq.gz; do
 
     echo "Submitted job for $SAMPLE."
 done
+
+mkdir -p run_stats
+mkdir -p plots
+mkdir -p tables
+mkdir -p results_log2FC
