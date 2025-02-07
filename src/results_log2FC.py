@@ -6,7 +6,11 @@ import math
 
 # Generate a results.csv table
 
-df_combined = pd.read_csv(f'results_cutadaptv2/all_results_combined_cleaned_21_25.csv')
+# df_combined = pd.read_csv(f'results_cutadaptv2/all_results_combined_cleaned_21_25.csv')
+parser.add_argument('--combined_results', type=str, required=True, help='File for the combined results: all_results_combined_cleaned_21_25.csv')
+args = parser.parse_args()
+
+df_combined = pd.read_csv(args.combined_results)
 
 def split_df(df, label):
     # Filter for the specific label and treatment
