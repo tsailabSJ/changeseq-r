@@ -43,9 +43,6 @@ if run == True:
 
     # Concatenate all DataFrames
     df_combined = pd.concat(data_frames, ignore_index=True)
-    
-    # sample_info = pd.read_csv("template_sequences.csv")
-    sample_info = pd.read_csv("sample_info.csv")
 
     # Merge the combined DataFrame with the lookup table
     df_combined = pd.merge(df_combined, sample_info, left_on='sample', right_on = "Sample", how='left')
