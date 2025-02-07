@@ -43,6 +43,4 @@ for R1 in "$INPUT_DIR"/*_R1_*.fastq.gz; do
 done
 
 mkdir -p run_stats
-mkdir -p plots
-mkdir -p tables
 mkdir -p results_log2FC
