@@ -22,8 +22,11 @@ The pipeline:
   
 ## Requirements
 
-- **SeqKit v2.5.1**  
-- **Cutadapt v4.4**
+- **SeqKit version: 2.5.1**  
+- **Cutadapt version: 4.4**
+- **Python version: 3.10.9**
+- **pandas version: 2.2.3**
+- **numpy version: 1.26.4**
 
 Ensure these tools are installed and accessible in your environment.
 
